@@ -28,21 +28,21 @@ stages:
           backendServiceAWS: 'AWS_DEVOPS_TEST'
           backendAWSBucketName: 'weproov-testweproov-shared-tfstates'
           command: 'init'
-          workingDirectory: '$(System.DefaultWorkingDirectory)/terraform/iac/organizations/Dev/renaissance/'
+          workingDirectory: '$(System.DefaultWorkingDirectory)/terraform/'
           backendAWSKey: 'renaissance.tfstate'
           commandOptions: '-reconfigure'
       - task: TerraformTaskV4@4
         inputs:
           provider: 'aws'
           command: 'plan'
-          workingDirectory: '$(System.DefaultWorkingDirectory)/terraform/iac/organizations/Dev/renaissance/'
+          workingDirectory: '$(System.DefaultWorkingDirectory)/terraform/'
           environmentServiceNameAWS: 'AWS_DEVOPS_TEST'
           commandOptions: '-out'
       - task: TerraformTaskV4@4
         inputs:
           provider: 'aws'
           command: 'show'
-          workingDirectory: '$(System.DefaultWorkingDirectory)/iac/organizations/Dev/renaissance/'
+          workingDirectory: '$(System.DefaultWorkingDirectory)/terraform/'
           outputTo: 'console'
           outputFormat: 'default'
           environmentServiceNameAWS: 'AWS_DEVOPS_TEST'
