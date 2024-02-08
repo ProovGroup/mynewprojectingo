@@ -38,7 +38,16 @@ pool:
   vmImage: ubuntu-latest
 
 ## START
-stages:
+stages:  
+  - stage: Terraform
+    displayName: 'terraform'
+    jobs:
+    - job: dependencies
+      steps:
+      - template: terraform.yml
+        parameters:
+          pool: 'Azure Pipelines'
+          vmImage: 'ubuntu-latest'
   - stage: GO
     displayName: 'go dependencies and build'
     jobs:
