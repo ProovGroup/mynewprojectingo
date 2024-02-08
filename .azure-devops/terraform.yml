@@ -1,0 +1,58 @@
+trigger: none # add this trigger value to none 
+
+pool:
+  vmImage: ubuntu-latest
+
+# # this pipeline will be triggered by another pipeline
+# resources:
+#   pipelines:
+#   - pipeline: settingsPipeline   # Name of the pipeline resource
+#     source: \2_Renaissance\deployLambda # Name of the pipeline referenced by the pipeline resource
+#     trigger: true # enable the trigger
+
+
+stages:
+  - stage: TERRAFORM
+    displayName: 'go dependencies and build'
+    jobs:
+    - job: TERRAFORM
+      steps:
+      - task: charleszipp.azure-pipelines-tasks-terraform.azure-pipelines-tasks-terraform-installer.TerraformInstaller@0
+        displayName: terraform install
+        inputs:
+          terraformVersion: 'latest'
+      - task: TerraformTaskV4@4
+        displayName: terraform init
+        inputs:
+          provider : aws
+          backendServiceAWS: 'AWS_DEVOPS_TEST'
+          backendAWSBucketName: 'weproov-testweproov-shared-tfstates'
+          command: 'init'
+          workingDirectory: '$(System.DefaultWorkingDirectory)/terraform/iac/organizations/Dev/renaissance/'
+          backendAWSKey: 'renaissance.tfstate'
+          commandOptions: '-reconfigure'
+      - task: TerraformTaskV4@4
+        inputs:
+          provider: 'aws'
+          command: 'plan'
+          workingDirectory: '$(System.DefaultWorkingDirectory)/terraform/iac/organizations/Dev/renaissance/'
+          environmentServiceNameAWS: 'AWS_DEVOPS_TEST'
+          commandOptions: '-out'
+      - task: TerraformTaskV4@4
+        inputs:
+          provider: 'aws'
+          command: 'show'
+          workingDirectory: '$(System.DefaultWorkingDirectory)/iac/organizations/Dev/renaissance/'
+          outputTo: 'console'
+          outputFormat: 'default'
+          environmentServiceNameAWS: 'AWS_DEVOPS_TEST'
+  - job: BUILD
+    dependsOn: TERRAFORM  # This specifies that SecondJob depends on the completion of FirstJob
+    displayName: 'build function'
+    steps:
+    - template: main.yml
+      parameters:
+        pool: 'Azure Pipelines'
+        vmImage: 'ubuntu-latest'
+
+
