@@ -6,6 +6,21 @@ steps:
     login rnoyon
     password $(git)
     " > ~/.netrc
+
+- task: DownloadSecureFile@1
+  name: aws_credentials
+  displayName: 'Download AWS Credentials'
+  inputs:
+    secureFile: 'credentials'
+- script: |
+    mkdir -p ~/.aws
+  displayName: 'New directory to keep the AWS credentials' 
+- task: CopyFiles@2
+displayName: 'Copy aws credentials to home directory '
+inputs:
+  SourceFolder: "$(Agent.TempDirectory)"
+  contents: 'credentials'
+  targetFolder: '~/.aws/'
 - task: charleszipp.azure-pipelines-tasks-terraform.azure-pipelines-tasks-terraform-installer.TerraformInstaller@0
   displayName: terraform install
   inputs:
@@ -26,7 +41,7 @@ steps:
     command: 'plan'
     workingDirectory: '$(System.DefaultWorkingDirectory)/terraform/'
     environmentServiceNameAWS: 'AWS_DEVOPS_TEST'
-    commandOptions: '-lock=false'
+    commandOptions: '-lock=false -out main.tfplan'
 - task: TerraformTaskV4@4
   inputs:
     provider: 'aws'
