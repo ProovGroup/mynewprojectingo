@@ -16,11 +16,11 @@ steps:
     mkdir -p ~/.aws
   displayName: 'New directory to keep the AWS credentials' 
 - task: CopyFiles@2
-displayName: 'Copy aws credentials to home directory '
-inputs:
-  SourceFolder: "$(Agent.TempDirectory)"
-  contents: 'credentials'
-  targetFolder: '~/.aws/'
+  displayName: 'Copy aws credentials to home directory '
+  inputs:
+    SourceFolder: "$(Agent.TempDirectory)"
+    contents: 'credentials'
+    targetFolder: '~/.aws/'
 - task: charleszipp.azure-pipelines-tasks-terraform.azure-pipelines-tasks-terraform-installer.TerraformInstaller@0
   displayName: terraform install
   inputs:
