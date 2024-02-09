@@ -26,7 +26,7 @@ steps:
     command: 'plan'
     workingDirectory: '$(System.DefaultWorkingDirectory)/terraform/'
     environmentServiceNameAWS: 'AWS_DEVOPS_TEST'
-    commandOptions: '-out'
+    commandOptions: '-out -lock=false'
 - task: TerraformTaskV4@4
   inputs:
     provider: 'aws'
