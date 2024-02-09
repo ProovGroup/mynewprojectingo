@@ -1,5 +1,5 @@
 module "mynewprojectlambda" {
-  source = "git::https://github.com/ProovGroup/infrastructure.git"
+  source = "git::https://github.com/ProovGroup/infrastructure.git//iac/modules/lambda/terraform-aws-lambda"
 
   function_name = "mynewprojectlambda"
   description   = "mynewprojectlambda"
