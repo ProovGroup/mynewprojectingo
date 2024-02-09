@@ -36,6 +36,7 @@ steps:
     backendAWSKey: 'renaissance.tfstate'
     commandOptions: '-lock=false'
 - task: TerraformTaskV4@4
+  displayName: terraform plan
   inputs:
     provider: 'aws'
     command: 'plan'
@@ -43,6 +44,7 @@ steps:
     environmentServiceNameAWS: 'AWS_DEVOPS_TEST'
     commandOptions: '-lock=false -out main.tfplan'
 - task: TerraformTaskV4@4
+  displayName: terraform show
   inputs:
     provider: 'aws'
     command: 'show'
